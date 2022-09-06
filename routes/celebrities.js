@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const Celebrity = require('../models/Celebrity')
 
-// listing our celebrities
+// show all celebrities
 router.get('/celebrities', (req, res, next) => {
 	// get all the celebrities from the db
 	Celebrity.find()
@@ -12,12 +12,12 @@ router.get('/celebrities', (req, res, next) => {
 		.catch(err => next(err))
 })
 
-// celebrities/new view
+// celebrities/new - show a form to create a celebrity
 router.get('/celebrities/new', (req, res, next) => {
 	res.render('celebrities/new')
 });
 
-// the celebrity details page
+// show a specific celebrity
 router.get('/celebrities/:id', (req, res, next) => {
 	const celebrityId = req.params.id
 	Celebrity.findById(celebrityId)
@@ -42,10 +42,40 @@ router.post('/celebrities', (req, res, next) => {
 			// res.render('celebrities/show', { celebrity: createdCelebrity })
 		})
 		.catch(err => next(err))
-
 });
 
-// post route to delete a celebrity from the database
+// get route to shows to edit a celebrity
+router.get('/celebrities/:celebrityId/edit', (req, res, next) => {
+	const { celebrityId } = req.params;
+	
+	Celebrity.findById(celebrityId)
+		.then(celebrityFromDB => {
+			res.render('celebrities/edit', { celebrity: celebrityFromDB })
+		})
+		.catch(err => next(err))
+});
+
+// post route to send the data from the form to this route to update
+// and save the celebrity from the database
+router.post('/celebrities/edit/:id', (req, res, next) => {
+	const { name, occupation, catchPhrase } = req.body
+	const id = req.params.id
+	// update this book in the db
+	// if this should return the updated book -> add {new: true} 
+	Celebrity.findByIdAndUpdate(id, {
+		name, occupation, catchPhrase
+	}, { new: true })
+		.then(updatedCelebrity => {
+			console.log(updatedCelebrity)
+			// redirect to the detail page of the updated book	
+			res.redirect(`/celebrities/${updatedCelebrity._id}`)
+		})
+		.catch(err => {
+			next(err)
+		})
+});
+
+// post route to delete a specific celebrity
 router.post('/celebrities/:celebrityId/delete', (req, res, next) => {
 	const { celebrityId } = req.params;
 
