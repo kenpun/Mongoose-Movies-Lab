@@ -1,8 +1,6 @@
-const { Schema, model } = require('mongoose');
-
-// Create the Celebrity model with the schema.
-const celebritySchema = new Schema(
-    {
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const celebritySchema = new Schema({
         name: {
             type: String
         },
@@ -14,8 +12,7 @@ const celebritySchema = new Schema(
             type: String,
             required: true
         }
-    }
-)
+    });
 
-// export the celebrity model
-module.exports = model('Celebrity', celebritySchema);
+const Celebrity = mongoose.model("Celebrity", celebritySchema);
+module.exports = Celebrity;

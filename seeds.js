@@ -5,14 +5,13 @@ mongoose.connect(mongoURI)
 	.then(db => console.log(`connected to database`))
 	.catch(err => console.log(err))
 
-const Celebrity = require("./models/celebrity")
+const Celebrity = require("./models/Celebrity")
 
-// Create an array of 3 objects, each with name, occupation and catchPhrase
 const celebrities = [
     {
         name: 'Tom Cruise',
         occupation: 'actor',
-        catchPhrase: 'I feel the need, the need for speed.'
+        catchPhrase: "I feel the need, the need for speed."
     },
     {
         name: 'Beyonce',
@@ -26,10 +25,9 @@ const celebrities = [
     }
 ]
 
-// Call the Celebrity model's insertMany method with the array as argument.
 Celebrity.insertMany(celebrities)
     .then(celebrities => {
-    console.log(`Success - added ${celebrities.length} books to the db`)
-    mongoose.connection.close()
-})
+        console.log(`Success - added ${celebrities.length} books to the db`)
+        mongoose.connection.close()
+    })
     .catch(err => console.log(err))
